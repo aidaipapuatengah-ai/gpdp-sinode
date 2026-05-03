@@ -14,7 +14,7 @@ html,body{height:100%;font-family:"Segoe UI",system-ui,sans-serif;background:var
 #auth-screen{min-height:100vh;background:var(--navy);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px}
 .auth-logo{width:80px;height:80px;border-radius:50%;overflow:hidden;margin-bottom:16px;border:2px solid rgba(201,168,76,0.4)}
 .auth-logo img{width:100%;height:100%;object-fit:cover}
-.auth-title{font-size:22px;font-weight:700;color:var(--gold-light);text-align:center;line-height:1.3;margin-bottom:4px}
+.auth-title{font-size:28px;font-weight:800;color:var(--gold-light);text-align:center;line-height:1.3;margin-bottom:4px;letter-spacing:.08em}
 .auth-subtitle{font-size:11px;color:rgba(255,255,255,0.4);text-align:center;letter-spacing:.1em;text-transform:uppercase;margin-bottom:32px}
 .auth-card{background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.18);border-radius:20px;padding:28px 22px;width:100%;max-width:380px}
 .auth-tabs{display:flex;background:rgba(255,255,255,0.05);border-radius:10px;padding:3px;margin-bottom:24px}
@@ -30,6 +30,8 @@ html,body{height:100%;font-family:"Segoe UI",system-ui,sans-serif;background:var
 .btn-p:disabled{opacity:.6;cursor:not-allowed}
 .auth-btn{width:100%;padding:14px;background:transparent;color:var(--gold-light);border:1px solid rgba(201,168,76,0.4);border-radius:10px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:6px}
 .auth-btn:hover{background:rgba(201,168,76,0.1)}.auth-btn:disabled{opacity:.6;cursor:not-allowed}
+.btn-keluar{width:100%;padding:12px;background:transparent;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:10px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:8px}
+.btn-keluar:hover{background:rgba(192,57,43,0.2);color:#FF9090;border-color:rgba(192,57,43,0.4)}
 #app-shell{display:none;flex-direction:column;min-height:100vh}#app-shell.show{display:flex}
 .topbar{background:var(--navy);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.25)}
 .topbar-left{display:flex;align-items:center;gap:10px}
@@ -145,8 +147,8 @@ html,body{height:100%;font-family:"Segoe UI",system-ui,sans-serif;background:var
 <img id="hiddenLogo" src="data:image/jpeg;base64,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" style="display:none" alt=""/>
 <div id="auth-screen">
   <div class="auth-logo"><img id="logo1" src="" alt="GPDP"/></div>
-  <div class="auth-title">Pendataan Gereja<br>Sinode GPDP</div>
-  <div class="auth-subtitle">Sistem Informasi Jemaat</div>
+  <div class="auth-title">SINODE GPDP</div>
+  <div class="auth-subtitle">Sistem Data Gembala &amp; Jemaat</div>
   <div id="authStats" style="display:flex;gap:14px;margin-bottom:18px;flex-wrap:wrap;justify-content:center">
     <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:10px 16px;text-align:center;min-width:90px">
       <div style="font-size:20px;font-weight:800;color:var(--gold-light)" id="statJemaat">-</div>
@@ -174,6 +176,7 @@ html,body{height:100%;font-family:"Segoe UI",system-ui,sans-serif;background:var
       <div class="fg"><label>Password</label>
         <input type="password" id="kpas" placeholder="Password"/></div>
       <button class="btn-p" id="btnlk" onclick="doLoginKlasis()">Masuk</button>
+      <button class="btn-keluar" onclick="window.close()">&#x1F6AA; Keluar</button>
     </div>
     <div id="tab1" style="display:none">
       <div class="fg"><label>Username</label>
@@ -181,6 +184,7 @@ html,body{height:100%;font-family:"Segoe UI",system-ui,sans-serif;background:var
       <div class="fg"><label>Password</label>
         <input type="password" id="bpas" placeholder="Default: 12345678"/></div>
       <button class="auth-btn" id="btnlb" onclick="doLoginBen()">Masuk sebagai BENDUM</button>
+      <button class="btn-keluar" onclick="window.close()">&#x1F6AA; Keluar</button>
     </div>
     <div id="tab2" style="display:none">
       <div class="fg"><label>Username</label>
@@ -188,6 +192,7 @@ html,body{height:100%;font-family:"Segoe UI",system-ui,sans-serif;background:var
       <div class="fg"><label>Password</label>
         <input type="password" id="spas" placeholder="Default: 12345678"/></div>
       <button class="auth-btn" id="btnls" onclick="doLoginSuper()">Masuk sebagai SEKUM</button>
+      <button class="btn-keluar" onclick="window.close()">&#x1F6AA; Keluar</button>
     </div>
   </div>
 </div>
@@ -339,7 +344,7 @@ html,body{height:100%;font-family:"Segoe UI",system-ui,sans-serif;background:var
     </div>
 
     <div class="pg" id="pBak">
-      <div class="pt">Backup &amp; Keamanan</div>
+      <div class="pt">&#x1F4BE; Backup &amp; Keamanan</div>
       <div class="sc"><div class="sh"><span>&#x1F4BE;</span><span class="sh-t">Backup Data</span></div><div class="sb">
         <button class="bex bbk" style="width:100%;padding:14px;font-size:14px" onclick="doBackup()">&#x1F4BE; Download Backup</button>
       </div></div>
@@ -353,16 +358,21 @@ html,body{height:100%;font-family:"Segoe UI",system-ui,sans-serif;background:var
           <button class="bex bbk" style="width:100%;padding:13px;margin-top:14px" onclick="doRestore()">&#x1F504; Mulai Restore</button>
         </div>
       </div></div>
-      <div class="sc"><div class="sh"><span>&#x1F512;</span><span class="sh-t">Keamanan</span></div><div class="sb">
+      <div class="sc"><div class="sh"><span>&#x1F511;</span><span class="sh-t">Ganti Password SEKUM</span></div><div class="sb">
+        <div class="fg2"><label>Password Lama</label><input type="password" id="sOldPwd" placeholder="Password saat ini"/></div>
+        <div class="fg2"><label>Password Baru</label><input type="password" id="np1" placeholder="Min 8 karakter"/></div>
+        <div class="fg2"><label>Konfirmasi Password Baru</label><input type="password" id="np2" placeholder="Ulangi password baru"/></div>
+        <button class="bex bbk" style="width:100%;padding:13px" onclick="gantiPwd()">&#x1F511; Simpan Password</button>
+      </div></div>
+      <div class="sc"><div class="sh"><span>&#x1F504;</span><span class="sh-t">Reset Password SEKUM</span></div><div class="sb">
+        <p style="font-size:13px;color:var(--text-mid);margin-bottom:12px">Reset password ke default <strong>12345678</strong>. Gunakan jika lupa password.</p>
+        <button class="bex" style="width:100%;padding:13px;background:var(--danger);color:#fff;border:none" onclick="resetPwdSekum()">&#x1F504; Reset ke Password Default</button>
+      </div></div>
+      <div class="sc"><div class="sh"><span>&#x1F512;</span><span class="sh-t">Info Keamanan</span></div><div class="sb">
         <div class="ir"><span class="irl">Koneksi</span><span class="irv" style="color:var(--success)">&#x1F7E2; HTTPS</span></div>
         <div class="ir"><span class="irl">Brute Force</span><span class="irv" style="color:var(--success)">&#x2705; 5x/15 mnt</span></div>
         <div class="ir"><span class="irl">Session</span><span class="irv" style="color:var(--success)">&#x2705; 30 Menit</span></div>
         <div class="ir"><span class="irl">Versi</span><span class="irv">v4.0</span></div>
-        <div style="margin-top:14px">
-          <div class="fg2"><label>Password Baru</label><input type="password" id="np1" placeholder="Min 8 karakter"/></div>
-          <div class="fg2"><label>Konfirmasi</label><input type="password" id="np2" placeholder="Ulangi password"/></div>
-          <button class="bex bbk" style="width:100%;padding:13px" onclick="gantiPwd()">&#x1F511; Ganti Password</button>
-        </div>
       </div></div>
     </div>
 
@@ -465,9 +475,95 @@ html,body{height:100%;font-family:"Segoe UI",system-ui,sans-serif;background:var
 
   <!-- HALAMAN BENDAHARA -->
   <div class="pg" id="pBenKas">
-    <div class="pt">Kas Jemaat</div>
+    <div class="pt">&#x1F4B0; Kas Sinode GPDP</div>
+    <!-- Statistik ringkasan -->
     <div class="sgrid4" id="benStat"></div>
+    <!-- Ringkasan per Jemaat -->
+    <div class="sc">
+      <div class="sh"><span>&#x26EA;</span><span class="sh-t">Ringkasan per Jemaat</span></div>
+      <div class="sb" id="benJmtList">
+        <div class="es"><div class="ei">&#x1F4CB;</div><p>Belum ada data jemaat</p></div>
+      </div>
+    </div>
     <!-- Setoran Perpuluhan -->
+    <div class="sc">
+      <div class="sh"><span>&#x1F4B5;</span><span class="sh-t">Catat Setoran Perpuluhan</span></div>
+      <div class="sb">
+        <div class="fg2"><label>Nama Jemaat</label>
+          <select id="benJmt"><option value="">-- Pilih Jemaat --</option></select></div>
+        <div class="fg2"><label>Jumlah Perpuluhan (Rp)</label>
+          <input type="number" id="benPpl" placeholder="0" min="0"/></div>
+        <div class="fr2">
+          <div class="fg2"><label>Bulan</label>
+            <select id="benBln">
+              <option value="1">Januari</option><option value="2">Februari</option>
+              <option value="3">Maret</option><option value="4">April</option>
+              <option value="5">Mei</option><option value="6">Juni</option>
+              <option value="7">Juli</option><option value="8">Agustus</option>
+              <option value="9">September</option><option value="10">Oktober</option>
+              <option value="11">November</option><option value="12">Desember</option>
+            </select></div>
+          <div class="fg2"><label>Tahun</label>
+            <input type="number" id="benThn" placeholder="2025" min="2020" max="2099"/></div>
+        </div>
+        <button class="btn-save" onclick="savePerpuluhan()">&#x1F4BE; Simpan Perpuluhan</button>
+      </div>
+    </div>
+    <!-- Setoran Iuran Jemaat Bulanan -->
+    <div class="sc">
+      <div class="sh"><span>&#x1F4B3;</span><span class="sh-t">Setoran Iuran Jemaat Bulanan</span></div>
+      <div class="sb">
+        <div class="fg2"><label>Nama Jemaat</label>
+          <select id="benJmtB"><option value="">-- Pilih Jemaat --</option></select></div>
+        <div class="fg2"><label>Jumlah Iuran (Rp)</label>
+          <input type="number" id="benBulAmt" placeholder="0" min="0"/></div>
+        <div class="fg2"><label>Keterangan</label>
+          <input type="text" id="benBulKet" placeholder="Keterangan setoran"/></div>
+        <div class="fr2">
+          <div class="fg2"><label>Bulan</label>
+            <select id="benBulBln">
+              <option value="1">Januari</option><option value="2">Februari</option>
+              <option value="3">Maret</option><option value="4">April</option>
+              <option value="5">Mei</option><option value="6">Juni</option>
+              <option value="7">Juli</option><option value="8">Agustus</option>
+              <option value="9">September</option><option value="10">Oktober</option>
+              <option value="11">November</option><option value="12">Desember</option>
+            </select></div>
+          <div class="fg2"><label>Tahun</label>
+            <input type="number" id="benBulThn" placeholder="2025"/></div>
+        </div>
+        <button class="btn-save" onclick="saveSetorBulanan()">&#x1F4BE; Simpan Iuran Bulanan</button>
+      </div>
+    </div>
+    <!-- Setoran Tahunan Rp 20.000/Jiwa -->
+    <div class="sc">
+      <div class="sh"><span>&#x1F4C5;</span><span class="sh-t">Setoran Tahunan Rp 20.000/Jiwa</span></div>
+      <div class="sb">
+        <div class="fg2"><label>Nama Jemaat</label>
+          <select id="benJmtT"><option value="">-- Pilih Jemaat --</option></select></div>
+        <div id="benJiwaInfo" style="background:var(--cream);border-radius:8px;padding:10px;margin-bottom:10px;font-size:13px;color:var(--navy);display:none">
+          Jumlah Jiwa: <strong id="benJmlJiwa">0</strong> &nbsp;|&nbsp;
+          Total: <strong id="benTotalThn">Rp 0</strong>
+        </div>
+        <div class="fg2"><label>Tahun</label>
+          <input type="number" id="benThnT" placeholder="2025"/></div>
+        <button class="btn-save" onclick="saveSetorTahunan()">&#x1F4BE; Simpan Setoran Tahunan</button>
+      </div>
+    </div>
+    <!-- Riwayat Transaksi -->
+    <div class="sc">
+      <div class="sh"><span>&#x1F4DC;</span><span class="sh-t">Riwayat Transaksi</span></div>
+      <div class="sb">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+          <button class="pill active" onclick="setBenFil('semua')">Semua</button>
+          <button class="pill" onclick="setBenFil('perpuluhan')">Perpuluhan</button>
+          <button class="pill" onclick="setBenFil('bulanan')">Iuran Bulanan</button>
+          <button class="pill" onclick="setBenFil('tahunan')">Tahunan</button>
+        </div>
+        <div id="benRiwayat"></div>
+      </div>
+    </div>
+  </div>
     <div class="sc">
       <div class="sh"><span>&#x1F4B5;</span><span class="sh-t">Catat Setoran Perpuluhan</span></div>
       <div class="sb">
@@ -591,7 +687,7 @@ html,body{height:100%;font-family:"Segoe UI",system-ui,sans-serif;background:var
   </div>
 
   <div class="pg" id="pBenBak">
-    <div class="pt">Backup &amp; Restore</div>
+    <div class="pt">&#x1F4BE; Backup &amp; Pengaturan</div>
     <div class="sc">
       <div class="sh"><span>&#x1F4BE;</span><span class="sh-t">Backup Data Kas</span></div>
       <div class="sb">
@@ -599,13 +695,22 @@ html,body{height:100%;font-family:"Segoe UI",system-ui,sans-serif;background:var
       </div>
     </div>
     <div class="sc">
-      <div class="sh"><span>&#x1F511;</span><span class="sh-t">Ganti Password</span></div>
+      <div class="sh"><span>&#x1F511;</span><span class="sh-t">Ganti Password BENDUM</span></div>
       <div class="sb">
+        <div class="fg2"><label>Password Lama</label>
+          <input type="password" id="bOldPwd" placeholder="Password saat ini"/></div>
         <div class="fg2"><label>Password Baru</label>
           <input type="password" id="bNp1" placeholder="Min. 6 karakter"/></div>
-        <div class="fg2"><label>Konfirmasi</label>
-          <input type="password" id="bNp2" placeholder="Ulangi"/></div>
-        <button class="btn-save" onclick="gantiPwdBen()">&#x1F511; Simpan</button>
+        <div class="fg2"><label>Konfirmasi Password Baru</label>
+          <input type="password" id="bNp2" placeholder="Ulangi password baru"/></div>
+        <button class="btn-save" onclick="gantiPwdBen()">&#x1F511; Simpan Password</button>
+      </div>
+    </div>
+    <div class="sc">
+      <div class="sh"><span>&#x1F504;</span><span class="sh-t">Reset Password BENDUM</span></div>
+      <div class="sb">
+        <p style="font-size:13px;color:var(--text-mid);margin-bottom:12px">Reset password ke default <strong>12345678</strong>. Gunakan jika lupa password.</p>
+        <button class="btn-save" style="background:var(--danger);border-color:var(--danger);color:#fff" onclick="resetPwdBen()">&#x1F504; Reset ke Password Default</button>
       </div>
     </div>
   </div>
@@ -843,22 +948,29 @@ async function doLoginSuper(){
   var btn=document.getElementById('btnls');
   btn.disabled=true;btn.textContent='Memeriksa...';
   try{
+    // Coba login dengan username yang dimasukkan
     var r=await db.from('superadmin').select('*').eq('username',u).eq('password',p).maybeSingle();
-    if(r.error){
-      // Jika tabel kosong, coba buat akun default sekum
-      if(u==='sekum'&&p==='12345678'){
-        var ins=await db.from('superadmin').upsert([{username:'sekum',password:'12345678',nama:'SEKUM Sinode GPDP'}],{onConflict:'username'}).select().maybeSingle();
-        if(ins.data)r={data:ins.data};
-        else{showErr('Koneksi gagal: '+r.error.message);return;}
-      }else{showErr('Koneksi gagal: '+r.error.message);return;}
+
+    // Jika tidak ditemukan dan user coba login sebagai sekum
+    if((!r.data||r.error)&&u==='sekum'&&p==='12345678'){
+      // Hapus akun superadmin lama jika ada
+      await db.from('superadmin').delete().eq('username','superadmin');
+      // Buat akun sekum baru
+      var ins=await db.from('superadmin').upsert(
+        [{username:'sekum',password:'12345678',nama:'SEKUM Sinode GPDP'}],
+        {onConflict:'username'}
+      ).select().maybeSingle();
+      if(ins.data){
+        r={data:ins.data,error:null};
+      }else{
+        showErr('Gagal membuat akun: '+(ins.error?ins.error.message:'coba lagi'));
+        return;
+      }
     }
-    if(!r.data){
-      if(u==='sekum'&&p==='12345678'){
-        var ins2=await db.from('superadmin').upsert([{username:'sekum',password:'12345678',nama:'SEKUM Sinode GPDP'}],{onConflict:'username'}).select().maybeSingle();
-        if(ins2.data)r={data:ins2.data};
-        else{showErr('Username atau password salah!');return;}
-      }else{showErr('Username atau password salah!');return;}
-    }
+
+    if(r.error){showErr('Koneksi gagal: '+r.error.message);return;}
+    if(!r.data){showErr('Username atau password salah!');return;}
+
     rstBF('s'+u);
     cu={role:'super'};
     startSes();enterApp();
@@ -1294,13 +1406,31 @@ async function doRestore(){
   }catch(e){hideLoad();showT('Gagal: '+e.message,'error');}
 }
 async function gantiPwd(){
+  var oldP=document.getElementById('sOldPwd').value;
   var p1=document.getElementById('np1').value,p2=document.getElementById('np2').value;
-  if(!p1||!p2)return showT('Isi kedua kolom!','error');
-  if(p1!==p2)return showT('Password tidak cocok!','error');
-  if(p1.length<8)return showT('Minimal 8 karakter!','error');
-  showLoad('Menyimpan...');
-  try{var r=await db.from('superadmin').update({password:p1}).eq('username','superadmin');if(r.error)throw r.error;hideLoad();showT('Password berhasil diubah!','success');document.getElementById('np1').value='';document.getElementById('np2').value='';}
-  catch(e){hideLoad();showT('Gagal: '+e.message,'error');}
+  if(!oldP)return showT('Masukkan password lama!','error');
+  if(!p1||!p2)return showT('Isi semua kolom!','error');
+  if(p1!==p2)return showT('Password baru tidak cocok!','error');
+  if(p1.length<6)return showT('Minimal 6 karakter!','error');
+  showLoad('Memverifikasi...');
+  try{
+    var cek=await db.from('superadmin').select('id').eq('username','sekum').eq('password',oldP).maybeSingle();
+    if(cek.error||!cek.data){hideLoad();showT('Password lama salah!','error');return;}
+    var r=await db.from('superadmin').update({password:p1}).eq('username','sekum');
+    if(r.error)throw r.error;
+    hideLoad();showT('Password SEKUM berhasil diubah!','success');
+    document.getElementById('sOldPwd').value='';document.getElementById('np1').value='';document.getElementById('np2').value='';
+  }catch(e){hideLoad();showT('Gagal: '+e.message,'error');}
+}
+
+async function resetPwdSekum(){
+  if(!confirm('Reset password SEKUM ke 12345678?'))return;
+  showLoad('Mereset...');
+  try{
+    var r=await db.from('superadmin').update({password:'12345678'}).eq('username','sekum');
+    if(r.error)throw r.error;
+    hideLoad();showT('Password SEKUM direset ke 12345678!','success');
+  }catch(e){hideLoad();showT('Gagal: '+e.message,'error');}
 }
 
 function popIDK(){
@@ -1628,6 +1758,7 @@ async function doLoginBen(){
     popBenJmtSel();
     renderBenStat();
     renderBenRiwayat();
+    renderBenJmtList();
     goPage('pBenKas','navB',0);
   }catch(e){showErr('Error: '+e.message);}
   finally{if(btn){btn.disabled=false;btn.textContent='Masuk sebagai BENDUM';}}
@@ -1689,7 +1820,7 @@ async function savePerpuluhan(){
       bulan:parseInt(bln),tahun:parseInt(thn),jemaat_id:jid,created_at:new Date().toISOString()}]);
     if(r.error)throw r.error;
     document.getElementById('benPpl').value='';
-    await loadBenKas();renderBenStat();renderBenRiwayat();
+    await loadBenKas();renderBenStat();renderBenRiwayat();renderBenJmtList();
     showT('Perpuluhan berhasil dicatat!','success');
   }catch(e){showT('Gagal: '+e.message,'error');}
   finally{hideLoad();}
@@ -1710,7 +1841,7 @@ async function saveSetorBulanan(){
       bulan:parseInt(bln),tahun:parseInt(thn),jemaat_id:jid,created_at:new Date().toISOString()}]);
     if(r.error)throw r.error;
     document.getElementById('benBulAmt').value='';document.getElementById('benBulKet').value='';
-    await loadBenKas();renderBenStat();renderBenRiwayat();
+    await loadBenKas();renderBenStat();renderBenRiwayat();renderBenJmtList();
     showT('Setoran bulanan berhasil dicatat!','success');
   }catch(e){showT('Gagal: '+e.message,'error');}
   finally{hideLoad();}
@@ -1730,7 +1861,7 @@ async function saveSetorTahunan(){
       jumlah:amt,keterangan:'Setoran Tahunan Rp20.000/jiwa - '+(jmt?jmt.nama_jemaat:'')+' ('+jiwa+' jiwa) - '+thn,
       tahun:parseInt(thn),jemaat_id:jid,created_at:new Date().toISOString()}]);
     if(r.error)throw r.error;
-    await loadBenKas();renderBenStat();renderBenRiwayat();
+    await loadBenKas();renderBenStat();renderBenRiwayat();renderBenJmtList();
     showT('Setoran tahunan Rp '+fmtRp(amt)+' berhasil dicatat!','success');
   }catch(e){showT('Gagal: '+e.message,'error');}
   finally{hideLoad();}
@@ -1771,7 +1902,7 @@ async function hapusKasBen(id){
   try{
     var r=await db.from('kas_klasis').delete().eq('id',id);
     if(r.error)throw r.error;
-    await loadBenKas();renderBenStat();renderBenRiwayat();renderBenRekap();
+    await loadBenKas();renderBenStat();renderBenRiwayat();renderBenJmtList();renderBenRekap();
     showT('Dihapus.','success');
   }catch(e){showT('Gagal: '+e.message,'error');}
   finally{hideLoad();}
@@ -1882,18 +2013,58 @@ async function doBackupBen(){
 }
 
 async function gantiPwdBen(){
+  var oldP=document.getElementById('bOldPwd').value;
   var p1=document.getElementById('bNp1').value;
   var p2=document.getElementById('bNp2').value;
-  if(!p1||!p2)return showT('Isi kedua kolom!','error');
-  if(p1!==p2)return showT('Password tidak cocok!','error');
+  if(!oldP)return showT('Masukkan password lama!','error');
+  if(!p1||!p2)return showT('Isi semua kolom!','error');
+  if(p1!==p2)return showT('Password baru tidak cocok!','error');
   if(p1.length<6)return showT('Minimal 6 karakter!','error');
-  showLoad('Menyimpan...');
+  showLoad('Memverifikasi...');
   try{
-    var r=await db.from('bendahara').update({password:p1}).eq('password',document.getElementById('bpas')?document.getElementById('bpas').value:p1);
+    var cek=await db.from('bendahara').select('id').eq('username','bendum').eq('password',oldP).maybeSingle();
+    if(cek.error||!cek.data){hideLoad();showT('Password lama salah!','error');return;}
+    var r=await db.from('bendahara').update({password:p1}).eq('username','bendum');
     if(r.error)throw r.error;
-    hideLoad();showT('Password berhasil diubah!','success');
-    document.getElementById('bNp1').value='';document.getElementById('bNp2').value='';
+    hideLoad();showT('Password BENDUM berhasil diubah!','success');
+    document.getElementById('bOldPwd').value='';document.getElementById('bNp1').value='';document.getElementById('bNp2').value='';
   }catch(e){hideLoad();showT('Gagal: '+e.message,'error');}
+}
+
+async function resetPwdBen(){
+  if(!confirm('Reset password BENDUM ke 12345678?'))return;
+  showLoad('Mereset...');
+  try{
+    var r=await db.from('bendahara').update({password:'12345678'}).eq('username','bendum');
+    if(r.error)throw r.error;
+    hideLoad();showT('Password BENDUM direset ke 12345678!','success');
+  }catch(e){hideLoad();showT('Gagal: '+e.message,'error');}
+}
+
+function renderBenJmtList(){
+  var el=document.getElementById('benJmtList');if(!el)return;
+  if(!AJ||AJ.length===0){
+    el.innerHTML='<div class="es"><div class="ei">&#x1F4CB;</div><p>Belum ada data jemaat</p></div>';return;
+  }
+  var html='';
+  AJ.forEach(function(j){
+    var jiwa=(j.jumlah_pria||0)+(j.jumlah_wanita||0)+(j.jumlah_anak||0);
+    var kasJ=benKas.filter(function(k){return k.jemaat_id===j.id;});
+    var totPpl=kasJ.filter(function(k){return k.kategori==='perpuluhan';}).reduce(function(a,k){return a+(k.jumlah||0);},0);
+    var totBul=kasJ.filter(function(k){return k.kategori==='setoran_bulanan';}).reduce(function(a,k){return a+(k.jumlah||0);},0);
+    var totThn=kasJ.filter(function(k){return k.kategori==='setoran_tahunan';}).reduce(function(a,k){return a+(k.jumlah||0);},0);
+    html+='<div style="background:var(--cream);border-radius:10px;padding:12px;margin-bottom:10px">'
+      +'<div style="font-weight:700;font-size:14px;color:var(--navy);margin-bottom:2px">'+j.nama_jemaat+'</div>'
+      +'<div style="font-size:12px;color:var(--text-mid);margin-bottom:8px">Gembala: <strong>'+(j.nama_gembala||'-')+'</strong> &nbsp;|&nbsp; Klasis: '+(j.klasis?j.klasis.nama:'-')+'</div>'
+      +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px">'
+      +'<div style="background:var(--white);border-radius:8px;padding:8px;text-align:center"><div style="font-size:13px;font-weight:800;color:var(--navy)">'+jiwa+'</div><div style="font-size:9px;color:var(--text-light);text-transform:uppercase">Jiwa</div></div>'
+      +'<div style="background:#E8F5EE;border-radius:8px;padding:8px;text-align:center"><div style="font-size:11px;font-weight:800;color:#27AE60">Rp '+fmtRp(totPpl)+'</div><div style="font-size:9px;color:var(--text-light);text-transform:uppercase">Perpuluhan</div></div>'
+      +'<div style="background:#E8F5EE;border-radius:8px;padding:8px;text-align:center"><div style="font-size:11px;font-weight:800;color:#27AE60">Rp '+fmtRp(totBul)+'</div><div style="font-size:9px;color:var(--text-light);text-transform:uppercase">Iuran Bln</div></div>'
+      +'</div>'
+      +'<div style="font-size:12px;color:var(--text-mid)">Setoran Tahunan: <strong style="color:#27AE60">Rp '+fmtRp(totThn)+'</strong></div>'
+      +'</div>';
+  });
+  el.innerHTML=html;
 }
 
 // Patch goPage untuk bendahara
