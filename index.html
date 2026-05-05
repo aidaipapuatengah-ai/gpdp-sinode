@@ -736,7 +736,7 @@ html,body{height:100%;font-family:"Segoe UI",system-ui,sans-serif;background:var
     <button class="navtab active" onclick="goPage('pInp','navK',0)">&#x1F4DD; Input</button>
   </div>
   <div class="navtabs" id="navS" style="display:none">
-    <button class="navtab active" onclick="goPage('pKls','navS',0)">&#x1F3DB; Klasis#x26EA; Gembala</button>
+    <button class="navtab active" onclick="goPage('pKls','navS',0)">&#x1F3DB; Klasis &amp; Gembala</button>
     <button class="navtab" onclick="goPage('pDat','navS',1)">&#x1F4CA; Data</button>
     <button class="navtab" onclick="goPage('pRekS','navS',2)">&#x1F4CB; Rekap</button>
     <button class="navtab" onclick="goPage('pLap','navS',3)">&#x1F4C4; Laporan</button>
@@ -805,6 +805,9 @@ html,body{height:100%;font-family:"Segoe UI",system-ui,sans-serif;background:var
           <input type="file" accept="image/*" id="filG" onchange="prvFile(this,'prvG','hntG')"/></div></div>
         <div class="fg2"><label>Nomor SK Gembala</label>
           <input type="text" id="fNsk" placeholder="Contoh: SK/GPDP/2024/001 (opsional)"/></div>
+        <div class="fg2"><label>Upload Foto SK (Opsional)</label>
+          <div class="ua"><img id="prvSK" class="up" alt=""/><div id="hntSK"><div style="font-size:30px;margin-bottom:8px">&#x1F4C4;</div><div style="font-size:13px;color:var(--text-mid)">Upload foto/scan SK</div><div style="font-size:11px;color:var(--text-light);margin-top:3px">JPG/PNG maks 5MB</div></div>
+          <input type="file" accept="image/*" id="filSK" onchange="prvFile(this,'prvSK','hntSK')"/></div></div>
       </div></div>
       <button class="btn-s" id="btnSub" onclick="doSubmit()" style="margin-bottom:80px">&#x1F4BE; Simpan Data Jemaat</button>
     </div>
@@ -1172,7 +1175,7 @@ html,body{height:100%;font-family:"Segoe UI",system-ui,sans-serif;background:var
         <div class="fg2"><label>Password Lama</label>
           <input type="password" id="bOldPwd" placeholder="Password saat ini"/></div>
         <div class="fg2"><label>Password Baru</label>
-          <input type="password" id="bNp1" placeholder="Min. 6 karakter"/></div>
+          <input type="password" id="bNp1" placeholder="Min. 8 karakter"/></div>
         <div class="fg2"><label>Konfirmasi Password Baru</label>
           <input type="password" id="bNp2" placeholder="Ulangi password baru"/></div>
         <button class="btn-save" onclick="gantiPwdBen()">&#x1F511; Simpan Password</button>
@@ -1251,6 +1254,7 @@ html,body{height:100%;font-family:"Segoe UI",system-ui,sans-serif;background:var
       <button class="bc" onclick="closeMod('modEJ')">Batal</button>
       <button class="bsv" id="ejSv" onclick="saveEditJ()">&#x1F4BE; Simpan</button>
     </div>
+  </div>
 </div>
 
 <!-- MODAL DETAIL -->
@@ -1541,17 +1545,22 @@ async function enterApp(){
   var logo=getLogo();
   document.getElementById('logo2').src=logo;
   document.getElementById('navA').style.display='none';
+  document.getElementById('navK').style.display='none';
+  document.getElementById('navS').style.display='none';
+  document.getElementById('navB').style.display='none';
   if(cu.role==='klasis'){
     document.getElementById('trole').textContent=cu.klasisName;
     document.getElementById('navK').style.display='flex';
-    document.getElementById('navS').style.display='none';
-    document.getElementById('navB').style.display='none';
     await loadJ();goPage('pInp','navK',0);
+  }else if(cu.role==='admin'){
+    document.getElementById('trole').textContent='ADMIN - '+(ADM?ADM.nama:'Administrator');
+    document.getElementById('navA').style.display='flex';
+    await Promise.all([loadKD(),loadJ()]);
+    admRenderDash();admRenderData();admRenderKlasis();
+    goPage('pAdmDash','navA',0);
   }else{
     document.getElementById('trole').textContent='SEKUM - Sinode GPDP';
     document.getElementById('navS').style.display='flex';
-    document.getElementById('navK').style.display='none';
-    document.getElementById('navB').style.display='none';
     await Promise.all([loadKD(),loadJ()]);
     popLapK();popIDK();popRekKF();goPage('pKls','navS',0);
   }
@@ -1559,7 +1568,7 @@ async function enterApp(){
 
 function doLogout(){
   if(!confirm('Yakin ingin keluar dari aplikasi?'))return;
-  stopSes();cu=null;ADM=null;AJ=[];KD=[];DD=[];
+  stopSes();cu=null;ADM=null;BEN=null;benKas=[];AJ=[];KD=[];DD=[];
   document.getElementById('app-shell').style.display='none';
   document.getElementById('auth-screen').style.display='flex';
   document.getElementById('ksel').value='';
@@ -1568,7 +1577,12 @@ function doLogout(){
   document.getElementById('spas').value='';
   document.getElementById('ausr').value='';
   document.getElementById('apas').value='';
+  var busr=document.getElementById('busr');if(busr)busr.value='';
+  var bpas=document.getElementById('bpas');if(bpas)bpas.value='';
   document.getElementById('navA').style.display='none';
+  document.getElementById('navK').style.display='none';
+  document.getElementById('navS').style.display='none';
+  document.getElementById('navB').style.display='none';
   hideErr();swTab(0);loadKSel();
 }
 
@@ -1616,6 +1630,10 @@ async function doSubmit(){
   try{
     var fG=document.getElementById('filG').files[0];
     var uG=fG?await upFoto(fG,'gembala'):null;
+    // Upload foto SK jika ada (opsional)
+    var uS=null;
+    var filSK=document.getElementById('filSK');
+    if(filSK&&filSK.files[0])uS=await upFoto(filSK.files[0],'sk');
     updLoad('Menyimpan data...');
     var ex=await db.from('jemaat').select('id').eq('klasis_id',cu.klasisId).eq('nama_jemaat',jmt).maybeSingle();
     var row={klasis_id:cu.klasisId,nama_gembala:gmb,nama_jemaat:jmt,nip:g('fNip'),no_wa:wa,alamat:alm,
@@ -1624,9 +1642,10 @@ async function doSubmit(){
       jumlah_pdp:parseInt(g('fPdp'))||0,jenis_bangunan:bgn,luas_bangunan:parseFloat(g('fLus'))||null,
       tahun_berdiri:parseInt(g('fThn'))||null,no_sk:(document.getElementById("fNsk")?document.getElementById("fNsk").value.trim():""),updated_at:new Date().toISOString()};
     if(uG)row.foto_gembala_url=uG;
+    if(uS)row.foto_sk_url=uS;
     var er;
     if(ex.data){var rv=await db.from('jemaat').update(row).eq('id',ex.data.id);er=rv.error;if(!er)showT('Data berhasil diperbarui!','success');}
-    else{row.foto_gembala_url=uG;row.foto_sk_url=uS;var rv=await db.from('jemaat').insert([row]);er=rv.error;if(!er)showT('Data berhasil disimpan!','success');}
+    else{var rv=await db.from('jemaat').insert([row]);er=rv.error;if(!er)showT('Data berhasil disimpan!','success');}
     if(er)throw er;
     rstForm();await loadJ();
   }catch(e){showT('Gagal: '+e.message,'error');}
@@ -1638,6 +1657,9 @@ function rstForm(){
   var pg=document.getElementById('prvG');if(pg){pg.src='';pg.style.display='none';}
   var hg=document.getElementById('hntG');if(hg)hg.style.display='block';
   var fg=document.getElementById('filG');if(fg)fg.value='';
+  var psk=document.getElementById('prvSK');if(psk){psk.src='';psk.style.display='none';}
+  var hsk=document.getElementById('hntSK');if(hsk)hsk.style.display='block';
+  var fsk=document.getElementById('filSK');if(fsk)fsk.value='';
   var nsk=document.getElementById('fNsk');if(nsk)nsk.value='';
 }
 
@@ -1786,14 +1808,12 @@ function renKls(data){
     var cnt=AJ.filter(function(j){return j.klasis_id===k.id;}).length;
     var div=document.createElement('div');div.className='kc';
     var info=document.createElement('div');info.className='kci';
-    // SEKUM: tampilkan tanpa password
-    var infoText=isSekum()?
-      '<div class="kcn">'+k.nama+'</div><div class="kcm">'+k.wilayah+' | '+cnt+' Jemaat</div>':
-      '<div class="kcn">'+k.nama+'</div><div class="kcm">@'+k.username+' | '+(k.wilayah||'-')+' | '+cnt+' Jemaat</div>';
+    // Semua role: tampilkan tanpa password
+    var infoText='<div class="kcn">'+k.nama+'</div><div class="kcm">'+(k.wilayah||'-')+' | '+cnt+' Jemaat</div>';
     info.innerHTML=infoText;
     div.appendChild(info);
-    // Tombol Edit/Hapus hanya untuk ADMIN (role=admin) atau super (login lama)
-    if(!isSekum()){
+    // Tombol Edit/Hapus hanya untuk ADMIN (role=admin) — SEKUM hanya lihat
+    if(cu&&cu.role==='admin'){
       var btnE=document.createElement('button');btnE.className='bsm be';btnE.textContent='Edit';
       btnE.addEventListener('click',function(){openKMod(k.id);});
       var btnD=document.createElement('button');btnD.className='bsm bd';btnD.textContent='Hapus';
@@ -1837,7 +1857,14 @@ async function hapKls(id){
   var cnt=AJ.filter(function(j){return j.klasis_id===id;}).length;
   if(!confirm('Hapus Klasis "'+k.nama+'"?'+(cnt?' '+cnt+' jemaat ikut terhapus!':'')))return;
   showLoad('Menghapus...');
-  try{await db.from('klasis').delete().eq('id',id);await Promise.all([loadKD(),loadJ(),loadKSel()]);showT('Klasis dihapus.','success');}
+  try{
+    await db.from('kas_klasis').delete().eq('klasis_id',id);
+    await db.from('jemaat').delete().eq('klasis_id',id);
+    await db.from('klasis').delete().eq('id',id);
+    await Promise.all([loadKD(),loadJ(),loadKSel()]);
+    loadAuthStats();
+    showT('Klasis berhasil dihapus.','success');
+  }
   catch(e){showT('Gagal: '+e.message,'error');}finally{hideLoad();}
 }
 
@@ -2427,7 +2454,7 @@ function admRenderKlasis(){
     var jmtK=AJ.filter(function(j){return j.klasis_id===k.id;});
     return '<div class="kc"><div class="kci">'+
       '<div class="kcn">'+k.nama+'</div>'+
-      '<div class="kcm">'+jmtK.length+' jemaat | Password: '+k.password+'</div>'+
+      '<div class="kcm">'+jmtK.length+' jemaat | @'+k.username+'</div>'+
       '</div>'+
       '<div style="display:flex;gap:6px">'+
       '<button class="bsm be" onclick="openKMod(\''+k.id+'\')">&#x270F; Edit</button>'+
@@ -2445,7 +2472,7 @@ function admFilKls(q){
     var jmtK=AJ.filter(function(j){return j.klasis_id===k.id;});
     return '<div class="kc"><div class="kci">'+
       '<div class="kcn">'+k.nama+'</div>'+
-      '<div class="kcm">'+jmtK.length+' jemaat | Password: '+k.password+'</div>'+
+      '<div class="kcm">'+jmtK.length+' jemaat | @'+k.username+'</div>'+
       '</div>'+
       '<div style="display:flex;gap:6px">'+
       '<button class="bsm be" onclick="openKMod(\''+k.id+'\')">&#x270F; Edit</button>'+
@@ -2611,6 +2638,9 @@ async function doLoginBen(){
       }else{showErr('Username atau password salah!');return;}
     }
     BEN={klasisId:null,klasisNama:'Sinode GPDP'};
+    cu={role:'bendahara'};
+    logAktivitas('Login BENDUM: '+usr,'bendahara',usr);
+    startSes();
     document.getElementById('auth-screen').style.display='none';
     var sh=document.getElementById('app-shell');sh.style.display='flex';sh.style.flexDirection='column';
     document.getElementById('logo2').src=getLogo();
@@ -2676,7 +2706,7 @@ function renderBenStat(){
   el.innerHTML=
     '<div class="sc2" style="text-align:center"><div class="sv" style="font-size:15px;color:#27AE60">Rp '+fmtRp(totIn)+'</div><div class="sl">Total Pemasukan</div></div>'+
     '<div class="sc2" style="text-align:center"><div class="sv" style="font-size:15px;color:#C0392B">Rp '+fmtRp(totOut)+'</div><div class="sl">Total Pengeluaran</div></div>'+
-    '<div class="sc2" style="grid-column:span 2;text-align:center"><div class="sv" style="font-size:15px;color:'+warna+'">Rp '+fmtRp(Math.abs(s))+'</div><div class="sl">Saldo '+label+'</div></div>';
+    '<div class="sc2" style="grid-column:span 2;text-align:center;border:1px solid '+warna+'40"><div class="sv" style="font-size:16px;color:'+warna+'">Rp '+fmtRp(Math.abs(s))+'</div><div class="sl">Saldo '+label+'</div></div>';
 }
 
 async function savePerpuluhan(){
@@ -2803,10 +2833,15 @@ function renderBenRekap(){
   var data=benPeriod==='bulan'
     ?benKas.filter(function(k){return k.bulan===now.getMonth()+1&&k.tahun===now.getFullYear();})
     :benKas.filter(function(k){return k.tahun===now.getFullYear();});
-  var totIn=data.reduce(function(a,k){return a+(k.jumlah||0);},0);
+  var totIn=data.filter(function(k){return k.jenis==='masuk';}).reduce(function(a,k){return a+(k.jumlah||0);},0);
+  var totOut=data.filter(function(k){return k.jenis==='keluar';}).reduce(function(a,k){return a+(k.jumlah||0);},0);
+  var saldo=totIn-totOut;
+  var warnaS=saldo>=0?'#27AE60':'#C0392B';
   var el=document.getElementById('benRekStat');
   if(el)el.innerHTML='<div class="sc2" style="text-align:center"><div class="sv">'+data.length+'</div><div class="sl">Transaksi</div></div>'
-    +'<div class="sc2" style="text-align:center"><div class="sv" style="font-size:15px;color:#27AE60">'+fmtRp(totIn)+'</div><div class="sl">Total</div></div>';
+    +'<div class="sc2" style="text-align:center"><div class="sv" style="font-size:15px;color:#27AE60">'+fmtRp(totIn)+'</div><div class="sl">Pemasukan</div></div>'
+    +'<div class="sc2" style="text-align:center"><div class="sv" style="font-size:15px;color:#C0392B">'+fmtRp(totOut)+'</div><div class="sl">Pengeluaran</div></div>'
+    +'<div class="sc2" style="text-align:center"><div class="sv" style="font-size:15px;color:'+warnaS+'">'+fmtRp(Math.abs(saldo))+'</div><div class="sl">Saldo '+(saldo>=0?'Surplus':'Defisit')+'</div></div>';
   var tbody=document.getElementById('benRekBody');if(!tbody)return;tbody.innerHTML='';
   data.forEach(function(k){
     var tr=document.createElement('tr');
@@ -2815,15 +2850,18 @@ function renderBenRekap(){
     btnD.addEventListener('click',function(){hapusKasBen(k.id);});
     var tdA=document.createElement('td');tdA.style.textAlign='center';tdA.appendChild(btnD);
     var tgl=k.created_at?new Date(k.created_at).toLocaleDateString('id-ID'):'-';
+    var isKeluar=k.jenis==='keluar';
+    var warnaAmt=isKeluar?'#C0392B':'#27AE60';
+    var prefix=isKeluar?'- ':'+';
     tr.innerHTML='<td style="padding:8px;font-size:11px;border-bottom:1px solid var(--border-light)">'+tgl+'</td>'
       +'<td style="padding:8px;font-size:11px;border-bottom:1px solid var(--border-light)">'+(k.kategori||'-').replace('_',' ')+'</td>'
       +'<td style="padding:8px;font-size:11px;border-bottom:1px solid var(--border-light)">'+k.keterangan+'</td>'
-      +'<td style="padding:8px;font-size:11px;border-bottom:1px solid var(--border-light);text-align:right;font-weight:700;color:#27AE60">Rp '+fmtRp(k.jumlah)+'</td>';
+      +'<td style="padding:8px;font-size:11px;border-bottom:1px solid var(--border-light);text-align:right;font-weight:700;color:'+warnaAmt+'">'+prefix+'Rp '+fmtRp(k.jumlah)+'</td>';
     tr.appendChild(tdA);tbody.appendChild(tr);
   });
   var tfoot=document.getElementById('benRekFoot');
-  if(tfoot)tfoot.innerHTML='<td colspan="3" style="padding:8px;background:var(--navy);color:var(--gold-light);font-weight:700;font-size:11px">TOTAL</td>'
-    +'<td style="padding:8px;background:var(--navy);color:var(--gold-light);font-weight:700;font-size:11px;text-align:right">Rp '+fmtRp(totIn)+'</td><td style="background:var(--navy)"></td>';
+  if(tfoot)tfoot.innerHTML='<td colspan="3" style="padding:8px;background:var(--navy);color:var(--gold-light);font-weight:700;font-size:11px">SALDO BERSIH</td>'
+    +'<td style="padding:8px;background:var(--navy);color:'+warnaS+';font-weight:700;font-size:11px;text-align:right">Rp '+fmtRp(Math.abs(saldo))+'</td><td style="background:var(--navy)"></td>';
 }
 
 function setBenLapPeriod(p){
@@ -2835,9 +2873,14 @@ function setBenLapPeriod(p){
   var data=p==='bulan'
     ?benKas.filter(function(k){return k.bulan===now.getMonth()+1&&k.tahun===now.getFullYear();})
     :benKas.filter(function(k){return k.tahun===now.getFullYear();});
-  var tot=data.reduce(function(a,k){return a+(k.jumlah||0);},0);
+  var totIn=data.filter(function(k){return k.jenis==='masuk';}).reduce(function(a,k){return a+(k.jumlah||0);},0);
+  var totOut=data.filter(function(k){return k.jenis==='keluar';}).reduce(function(a,k){return a+(k.jumlah||0);},0);
+  var saldo=totIn-totOut;
   var el=document.getElementById('benLapInfo');
-  if(el)el.innerHTML='Periode: <b>'+(p==='bulan'?now.toLocaleDateString('id-ID',{month:'long',year:'numeric'}):now.getFullYear())+'</b><br>Total: <b>Rp '+fmtRp(tot)+'</b> dari '+data.length+' transaksi';
+  if(el)el.innerHTML='Periode: <b>'+(p==='bulan'?now.toLocaleDateString('id-ID',{month:'long',year:'numeric'}):now.getFullYear())+'</b><br>'
+    +'Pemasukan: <b style="color:#27AE60">Rp '+fmtRp(totIn)+'</b> &nbsp;|&nbsp; Pengeluaran: <b style="color:#C0392B">Rp '+fmtRp(totOut)+'</b><br>'
+    +'Saldo: <b style="color:'+(saldo>=0?'#27AE60':'#C0392B')+'">Rp '+fmtRp(Math.abs(saldo))+(saldo>=0?' (Surplus)':' (Defisit)')+'</b>'
+    +'&nbsp;&mdash;&nbsp;'+data.length+' transaksi';
 }
 
 function fmtRp(n){return(n||0).toLocaleString('id-ID');}
@@ -2853,14 +2896,23 @@ function expExcelBen(){
     ?benKas.filter(function(k){return k.bulan===now.getMonth()+1&&k.tahun===now.getFullYear();})
     :benKas.filter(function(k){return k.tahun===now.getFullYear();});
   if(!data.length)return showT('Tidak ada data!','error');
+  var totIn=data.filter(function(k){return k.jenis==='masuk';}).reduce(function(a,k){return a+(k.jumlah||0);},0);
+  var totOut=data.filter(function(k){return k.jenis==='keluar';}).reduce(function(a,k){return a+(k.jumlah||0);},0);
   var rows=data.map(function(k,i){
     return {'No':i+1,'Tanggal':k.created_at?new Date(k.created_at).toLocaleDateString('id-ID'):'-',
-      'Jenis':k.kategori.replace('_',' '),'Keterangan':k.keterangan,'Jumlah (Rp)':k.jumlah};
+      'Jenis':(k.jenis==='masuk'?'Pemasukan':'Pengeluaran'),
+      'Kategori':k.kategori.replace(/_/g,' '),'Keterangan':k.keterangan,
+      'Pemasukan (Rp)':k.jenis==='masuk'?k.jumlah:0,
+      'Pengeluaran (Rp)':k.jenis==='keluar'?k.jumlah:0};
   });
+  rows.push({'No':'','Tanggal':'','Jenis':'TOTAL','Kategori':'','Keterangan':'',
+    'Pemasukan (Rp)':totIn,'Pengeluaran (Rp)':totOut});
+  rows.push({'No':'','Tanggal':'','Jenis':'SALDO','Kategori':'','Keterangan':'',
+    'Pemasukan (Rp)':totIn-totOut,'Pengeluaran (Rp)':''});
   var ws=XLSX.utils.json_to_sheet(rows);var wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,ws,'Kas Klasis');
+  XLSX.utils.book_append_sheet(wb,ws,'Kas Sinode');
   XLSX.writeFile(wb,'Kas_'+BEN.klasisNama+'_'+benLapPeriod+'_'+now.getFullYear()+'.xlsx');
-  showT('Excel berhasil!','success');
+  showT('Excel berhasil diunduh!','success');
 }
 
 function expPDFBen(){
@@ -2869,7 +2921,9 @@ function expPDFBen(){
     ?benKas.filter(function(k){return k.bulan===now.getMonth()+1&&k.tahun===now.getFullYear();})
     :benKas.filter(function(k){return k.tahun===now.getFullYear();});
   if(!data.length)return showT('Tidak ada data!','error');
-  var tot=data.reduce(function(a,k){return a+(k.jumlah||0);},0);
+  var totIn=data.filter(function(k){return k.jenis==='masuk';}).reduce(function(a,k){return a+(k.jumlah||0);},0);
+  var totOut=data.filter(function(k){return k.jenis==='keluar';}).reduce(function(a,k){return a+(k.jumlah||0);},0);
+  var saldo=totIn-totOut;
   var {jsPDF}=window.jspdf;var doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
   doc.setFillColor(26,39,68);doc.rect(0,0,210,22,'F');
   doc.setTextColor(255,255,255);doc.setFontSize(13);doc.setFont('helvetica','bold');
@@ -2877,14 +2931,24 @@ function expPDFBen(){
   doc.setFontSize(9);doc.text('Periode: '+(benLapPeriod==='bulan'?now.toLocaleDateString('id-ID',{month:'long',year:'numeric'}):now.getFullYear()),105,18,{align:'center'});
   doc.setTextColor(0,0,0);
   doc.autoTable({
-    head:[['No','Tanggal','Jenis','Keterangan','Jumlah (Rp)']],
-    body:data.map(function(k,i){return [i+1,k.created_at?new Date(k.created_at).toLocaleDateString('id-ID'):'-',k.kategori.replace('_',' '),k.keterangan,'Rp '+fmtRp(k.jumlah)];}),
+    head:[['No','Tanggal','Jenis','Keterangan','Pemasukan (Rp)','Pengeluaran (Rp)']],
+    body:data.map(function(k,i){return [
+      i+1,
+      k.created_at?new Date(k.created_at).toLocaleDateString('id-ID'):'-',
+      k.kategori.replace(/_/g,' '),
+      k.keterangan,
+      k.jenis==='masuk'?'Rp '+fmtRp(k.jumlah):'-',
+      k.jenis==='keluar'?'Rp '+fmtRp(k.jumlah):'-'
+    ];}),
     startY:28,headStyles:{fillColor:[26,39,68]},bodyStyles:{fontSize:8},
-    foot:[['','','','TOTAL','Rp '+fmtRp(tot)]],
+    foot:[
+      ['','','','Total','Rp '+fmtRp(totIn),'Rp '+fmtRp(totOut)],
+      ['','','','Saldo '+(saldo>=0?'Surplus':'Defisit'),'Rp '+fmtRp(Math.abs(saldo)),'']
+    ],
     footStyles:{fillColor:[26,39,68],textColor:[240,223,160],fontStyle:'bold'}
   });
   doc.save('Kas_'+BEN.klasisNama+'_'+benLapPeriod+'.pdf');
-  showT('PDF berhasil!','success');
+  showT('PDF berhasil diunduh!','success');
 }
 
 async function doBackupBen(){
@@ -2964,7 +3028,7 @@ async function gantiPwdBen(){
   if(!oldP)return showT('Masukkan password lama!','error');
   if(!p1||!p2)return showT('Isi semua kolom!','error');
   if(p1!==p2)return showT('Password baru tidak cocok!','error');
-  if(p1.length<6)return showT('Minimal 6 karakter!','error');
+  if(p1.length<8)return showT('Minimal 8 karakter!','error');
   showLoad('Memverifikasi...');
   try{
     var cek=await db.from('bendahara').select('id').eq('username','bendum').eq('password',oldP).maybeSingle();
@@ -3020,14 +3084,6 @@ goPage=function(pid,nid,idx){
   if(pid==='pBenKas')popBenJmtSel();
   if(pid==='pBenRek')renderBenRekap();
   if(pid==='pBenLap')setBenLapPeriod(benLapPeriod);
-};
-
-// Patch doLogout untuk clear bendahara
-var _origLogout=doLogout;
-doLogout=function(){
-  BEN=null;benKas=[];
-  document.getElementById('navB').style.display='none';
-  _origLogout();
 };
 
 function closeMod(id){document.getElementById(id).classList.remove('open');}
